@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- pyscript -->
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    <py-env>
+        - numpy
+    </py-env>
+
+    <!-- latexを使用するためmathjxというライブラリを読み込み -->
+    <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <!-- cssファイルを読み込み -->
+    <link href="style.css" rel="stylesheet" >
+
+    <title>コラッツの足跡</title>
+</head>
+<body class="body">
+    <div class="header">
+        <span style="font-size:100px;">Collatz</span>
+        <span style="font-size:25px;">の</span>
+        <span style="font-size:50px;">足跡</span>
+    </div>
+    <div class="menu">
+        <p style="font-size:30px;">MENU:</p>
+        <button class="menu-btn" id="pys-btnToGame" pys-onClick="toGame">GAME</button>
+        <button class="menu-btn" id="pys-btnToExplanation" pys-onClick="toExplanation">EXPLANATION</button>
+    </div>
+    <div class="display" id="pys-game-display">
+        <div class="card-container">
+            <div style="width:50%;">
+                <button class="random-btn" id="pys-random1" pys-onClick="RandomInt1"><span style="font-weight:bold;">player1:</span>random</button>
+                <div class="card" id="num1">waiting...</div>
+            </div>
+            <div style="width:50%;">
+                <button class="random-btn" id="pys-random2" pys-onClick="RandomInt2"><span style="font-weight:bold;">player2:</span>random</button>
+                <div class="card" id="num2">waiting...</div>
+            </div>
+        </div>
+        <button class="operation-btn" id="pys-collatz-btn" pys-onClick="CollatzOperation">Collatz Operation</button>
+        </div>
+    </div>
+    <div class="display" id="pys-explanation-display">
+        <div class="explanation-display">
+            <p style="font-size:12px;">Explanation</p>
+            <p style="margin-top:20px;">まず...</p>
+            <div style="margin-top:10px; margin-left:20px; margin-bottom:10px; background-color:lightcyan; width:550px;">
+                <span style="text-decoration:underline">コラッツ予想</span>:<br>
+                任意の正の整数nに対して、以下の操作を考える。<br>
+                ・nが偶数の場合、nを2で割る<br>
+                ・nが奇数の場合、nに3をかけて1を足す<br>
+                このとき、nがいかなる値でも有限回の操作のうちに必ず1に到達する。
+            </div>
+            これは未解決問題であり、1930年代頃に提唱されて以降証明されていない。<br>
+            「コラッツの足跡」では、コラッツ予想で登場する操作を用いたゲームである。<br>
+            <div style="margin-top:10px; margin-left:20px; margin-bottom:10px; background-color:beige; width:750px;">
+                <span style="text-decoration:underline">ルール</span><br>
+                ①2人のプレーヤーがそれぞれ「random」ボタンを押下し、自分の初期数字を決める。<br>
+                ②「Collatz Operation」ボタンを押下して両プレイヤーの数字にそれぞれコラッツ予想の操作を施す。<br>
+                ③ ②を繰り返し行い、先に自分の数字が1になったプレイヤーの勝利。
+            </div>
+            「コラッツの足跡」はコラッツ予想の操作を用いて「何歩」で1に到達することが出来るか競うゲームである。
+        </div>
+    </div>
+
+    <py-script>
+import numpy as np
+from js import document, window
+
+game_display = document.getElementById('pys-game-display')
+explanation_display = document.getElementById('pys-explanation-display')
+game_btn = document.getElementById('pys-btnToGame')
+explanation_btn = document.getElementById('pys-btnToExplanation')
+
+# 最初に呼び出す関数
+def init(*ags, **kws):
+    explanation_display.style.display = 'None'
+    game_btn.classList.add('is-active')
+init()
+
+# 画面切り替え用
+def toGame(*ags, **kws):
+    game_display.style.display = 'block'
+    explanation_display.style.display = 'None'
+    game_btn.classList.add('is-active')
+    explanation_btn.classList.remove('is-active')
+def toExplanation(*ags, **kws):
+    game_display.style.display = 'None'
+    explanation_display.style.display = 'block'
+    game_btn.classList.remove('is-active')
+    explanation_btn.classList.add('is-active')
+
+# 初期数生成用
+def RandomInt1(*ags, **kws):
+    num = np.random.randint(2,50)
+    document.getElementById('num1').innerHTML = num
+def RandomInt2(*ags, **kws):
+    num = np.random.randint(2,100)
+    document.getElementById('num2').innerHTML = num
+
+# コラッツの操作（1step）
+def Collatz(num):
+    if num % 2 == 0:
+        new_num = num / 2
+    else:
+        new_num = num * 3 + 1
+    return new_num
+
+def CollatzOperation(*ags, **kws):
+    num1 = int(document.getElementById('num1').innerHTML)
+    num2 = int(document.getElementById('num2').innerHTML)
+    new_num1, new_num2 = Collatz(num1), Collatz(num2)
+
+    document.getElementById('num1').innerHTML = new_num1
+    document.getElementById('num2').innerHTML = new_num2
+
+    if (new_num1 == 1) & (new_num2 != 1):
+        window.alert('winner: player1!!')
+    elif (new_num1 != 1) & (new_num2 == 1):
+        window.alert('winner: player2!!')
+    elif (new_num1 == 1) & (new_num2 == 1):
+        window.alert('winner: player1&player2!!')
+    </py-script>
+</body>
+</html>
