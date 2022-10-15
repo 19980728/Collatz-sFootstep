@@ -1,0 +1,73 @@
+.body {
+    background-color: darkgray;
+    font-family: Courier New;
+}
+.header {
+    margin-left: 50px;
+    height: 130px;
+    margin-top: 30px;
+    font-family: fantasy;
+}
+.menu { 
+    margin-left: 10%;
+    display: flex;
+    gap: 10px;
+}
+.display { 
+    background-color: white;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    height: 550px;
+    text-align: center;
+}
+
+.menu-btn {
+    background-color: black;
+    color: white;
+    width: 150px;
+    border-radius: 5px 5px 0 0;
+}
+.menu-btn.is-active {
+    background-color: white;
+    color: black;
+}
+
+.card-container {
+    display: flex;
+    gap:20px;
+}
+.random-btn {
+    margin-top: 15px;
+    background-color: lightskyblue;
+    border-radius: 10px;
+    width: 150px;
+    height: 30px;
+}
+.card {
+    margin-top: 10px;
+    background-color: lightyellow;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;;
+    height: 400px;
+    line-height: 400px;
+    font-size: 50px;
+    font-weight: bold;
+}
+.operation-btn {
+    margin-top: 15px;
+    background-color: lightcoral;
+    border-radius: 10px;
+    width: 200px;
+    height: 60px;
+    font-size: 20px;
+}
+
+.explanation-display {
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    text-align: left;
+    font-family: century;
+}
